@@ -4,15 +4,17 @@ import Juego from '../components/Juego';
 
 const Tableros = () => {
   return (
-    <>
-    <h2>Tableros (jugador y computadora)</h2>
+    <div className='p-5'>
+    <h2>Battleship</h2>
 
+    <div className="contenedor-tablero">
     <Juego />
+    </div>
 
-    <Link to="/" className='btn btn-dark mt-5'>
-        Regresar al menu
+    <Link to="/" className='btn btn-info btn-regresar-al-menu'>
+        Regresar al menú
     </Link>
-    </>
+    </div>
 
   )
 }

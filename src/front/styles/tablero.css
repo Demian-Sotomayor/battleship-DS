@@ -1,41 +1,54 @@
-/* En tu archivo CSS o en la sección de estilos de tu componente */
+
+/* -------- // ESTILOS TABLERO Y NAVES // -------- */
 
 .tablero {
-    border-collapse: collapse; /* Para fusionar los bordes de las celdas */
-  }
-  
-  .cuadrado {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ccc;
-    text-align: center;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  /* Estilos para las etiquetas de fila y columna */
-  .etiqueta {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ccc;
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  .cuadrado.clickeable {
-    background-color: #add8e6; 
-  }
-  
-  .cuadrado:not(.clickeable) {
-    background-color: #eee; 
-  }
-  
-  .cuadrado.agua {
-    color: #add8e6;
-  }
-  
-  .cuadrado.nave {
-    color: #000; 
-    background-color: #5196f0; 
-  }
-  
+  border-collapse: collapse;
+}
+
+.cuadrado {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.etiqueta {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 14px;
+}
+
+.cuadrado.clickeable {
+  background-color: #add8e6;
+}
+
+.cuadrado:not(.clickeable) {
+  background-color: #eee;
+}
+
+.cuadrado.agua {
+  color: #add8e6;
+}
+
+.cuadrado.nave {
+  color: #000;
+  background-color: #5196f0;
+}
+
+/* -------- // DETALLES // -------- */
+
+.btn-naves-aleatorias {
+    box-shadow: rgba(72, 182, 190, 0.35) 0px 5px 15px;
+    font-size: 17px;
+    width: 25%;
+}
+
+.btn-regresar-al-menu {
+    font-weight: 700;
+    font-size: 16px;
+    width: 15%;
+}

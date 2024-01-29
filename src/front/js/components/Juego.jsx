@@ -149,56 +149,54 @@ const Juego = () => {
   };
 
   return (
-    <>
-      <h1>Juego</h1>
-
-      <table className="tablero">
-        <thead>
-          <tr>
-            <th className="etiqueta"></th>
-            {Array.from({ length: 10 }, (_, index) => (
-              <th key={index} className="etiqueta">
-                {String.fromCharCode(65 + index)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableroJugador.map((fila, rowIndex) => (
-            <tr key={rowIndex}>
-              <td className="etiqueta">{rowIndex + 1}</td>
-              {fila.map((cuadrado, colIndex) => (
-                <td
-                  key={colIndex}
-                  className={`cuadrado ${
-                    cuadrado.clickeable ? "clickeable" : ""
-                  } ${cuadrado.contenido}`}
-                  onClick={() => handleClickCuadro(rowIndex, colIndex)}
-                  onMouseDown={(event) =>
-                    handleArrastrarNave(event, rowIndex, colIndex)
-                  }
-                  onMouseUp={(event) =>
-                    handleSoltarNave(event, rowIndex, colIndex)
-                  }
-                  onMouseMove={(event) =>
-                    handleMoverNave(event, rowIndex, colIndex)
-                  }
-                >
-                </td>
+    <div className="my-5">
+      <div className="contenedor-tablero d-flex justify-content-center">
+        <table className="tablero">
+          <thead>
+            <tr>
+              <th className="etiqueta"></th>
+              {Array.from({ length: 10 }, (_, index) => (
+                <th key={index} className="etiqueta">
+                  {String.fromCharCode(65 + index)}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {tableroJugador.map((fila, rowIndex) => (
+              <tr key={rowIndex}>
+                <td className="etiqueta">{rowIndex + 1}</td>
+                {fila.map((cuadrado, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className={`cuadrado ${
+                      cuadrado.clickeable ? "clickeable" : ""
+                    } ${cuadrado.contenido}`}
+                    onClick={() => handleClickCuadro(rowIndex, colIndex)}
+                    onMouseDown={(event) =>
+                      handleArrastrarNave(event, rowIndex, colIndex)
+                    }
+                    onMouseUp={(event) =>
+                      handleSoltarNave(event, rowIndex, colIndex)
+                    }
+                    onMouseMove={(event) =>
+                      handleMoverNave(event, rowIndex, colIndex)
+                    }
+                  ></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <button onClick={handleColocarNaves}>
+      <button
+        className="btn btn-info mt-5 fw-bold btn-naves-aleatorias"
+        onClick={handleColocarNaves}
+      >
         {colocandoNaves ? "Cancelar Colocación" : "Colocar Naves Aleatorias"}
       </button>
-
-      <div className="tablero">
-        {/* Lo iba a usar, no lo usé y ahora por alguna razón si lo quito se ven feos los botones XD, lo arreglo luego, es sólo visual */}
-      </div>
-    </>
+    </div>
   );
 };
 
