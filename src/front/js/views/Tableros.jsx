@@ -1,16 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import Juego from '../components/Juego';
 
-const Tablero = () => {
+const Tableros = () => {
   return (
-    <div className='mt-3'>
-    <h2>Tablero</h2>
+    <>
+    <h2>Tableros (jugador y computadora)</h2>
+
+    <Juego />
+
     <Link to="/" className='btn btn-dark mt-5'>
         Regresar al menu
     </Link>
-    </div>
+    </>
 
   )
 }
 
-export default Tablero;
+export default Tableros;

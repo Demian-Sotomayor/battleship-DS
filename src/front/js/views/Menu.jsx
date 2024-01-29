@@ -10,7 +10,7 @@ const Menu = () => {
 
         <h1 className="titulo-juego">Battleship</h1>
 
-        <Link to="/tablero" className="btn-iniciar-juego d-flex justify-content-center align-items-center text-decoration-none">
+        <Link to="/tableros" className="btn-iniciar-juego d-flex justify-content-center align-items-center text-decoration-none">
           <i className="fa-solid fa-play"></i>
         </Link>
 

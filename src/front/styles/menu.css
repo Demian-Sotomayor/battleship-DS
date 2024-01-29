@@ -3,8 +3,9 @@
 
 .titulo-juego {
     color: white;
-    margin-top: 70px;
     font-size: 60px;
+    position: absolute;
+    top: 20%;
 }
 
 /* -------- // BOTÓN MENÚ INICIAR JUEGO // -------- */

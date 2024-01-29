@@ -1,0 +1,41 @@
+/* En tu archivo CSS o en la sección de estilos de tu componente */
+
+.tablero {
+    border-collapse: collapse; /* Para fusionar los bordes de las celdas */
+  }
+  
+  .cuadrado {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  /* Estilos para las etiquetas de fila y columna */
+  .etiqueta {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .cuadrado.clickeable {
+    background-color: #add8e6; 
+  }
+  
+  .cuadrado:not(.clickeable) {
+    background-color: #eee; 
+  }
+  
+  .cuadrado.agua {
+    color: #add8e6;
+  }
+  
+  .cuadrado.nave {
+    color: #000; 
+    background-color: #5196f0; 
+  }
+  

@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Menu from './js/views/Menu';
-import Tablero from './js/views/Tablero';
-import Navbar from './js/components/Navbar';
+import Tableros from './js/views/Tableros';
 
 const Layout = () => {
 
@@ -10,10 +9,9 @@ const Layout = () => {
   return (
     <div className='img-fondo'>
         <BrowserRouter basename={basename}>
-            <Navbar/>
             <Routes>
                 <Route element={<Menu />} path='/' />
-                <Route element={<Tablero />} path='/tablero' />
+                <Route element={<Tableros />} path='/tableros' />
             </Routes>
         </BrowserRouter>
     </div>
