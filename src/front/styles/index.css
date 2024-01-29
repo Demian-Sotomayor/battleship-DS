@@ -1,4 +1,18 @@
 
+/* -------- // ESTILOS GENERALES // -------- */
+
 #root {
   text-align: center;
+}
+
+body {
+  overflow: hidden;
+}
+
+.img-fondo {
+    background: url('https://images.unsplash.com/photo-1566442035931-44210b2607b4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-position: center;
+    background-size: contain;
+    background-attachment: fixed;
+    height: 100vh;
 }

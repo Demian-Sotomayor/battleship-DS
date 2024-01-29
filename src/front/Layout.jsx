@@ -8,7 +8,7 @@ const Layout = () => {
     const basename = "/"
 
   return (
-    <div>
+    <div className='img-fondo'>
         <BrowserRouter basename={basename}>
             <Navbar/>
             <Routes>
