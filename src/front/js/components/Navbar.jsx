@@ -1,9 +1,16 @@
-import React from 'react'
+import React from "react";
 
 function Navbar() {
   return (
-    <div>Navbar</div>
-  )
+    <>
+      <nav className="navbar bg-dark" data-bs-theme="dark">
+        <div className="container-fluid">
+          <span className="navbar-brand mb-0 h1">Battleship</span>
+          <span className="navbar-brand mb-0 h1">Navbar de prueba</span>
+        </div>
+      </nav>
+    </>
+  );
 }
 
-export default Navbar
+export default Navbar;
