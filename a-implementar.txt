@@ -1,0 +1,4 @@
+//// Anotar detalles que haya notado en el proceso //// 
+
+1. No me gusta que deba tocar "colocar naves aleatorias" para que recién aparezca un tablero, que aparezca el botón tan arriba me incomoda como usuario (que me lo cambien de lugar tan drásticamente), tratar de dejar en posición fija ambos botones o por otro lado, hacer una condicional para que empiece visualmente con un tablero deshabilitado sin naves.
+
