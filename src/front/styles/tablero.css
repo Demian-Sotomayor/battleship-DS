@@ -40,18 +40,23 @@
 }
 
 /* Color de fondo de la nave arrastrada */
-.nave-arrastrada {
-  background-color: #ff3e03; /* Color de fondo de la nave arrastrada */
+/* .nave-arrastrada {
+  background-color: #ff3e03; 
 }
 
 .cuadrado.nave-arrastrada {
-  border: 2px solid #000; /* Bordes de los cuadrados durante el arrastre */
-  z-index: 1; /* Asegura que la nave arrastrada esté sobre otros elementos */
+  border: 2px solid #000; 
+  z-index: 1;
 }
 
 .cuadrado.arrastrando {
-  background-color: #d3e0ea; /* Color de fondo ligeramente distinto */
+  background-color: #d3e0ea;
 }
+
+.cuadrado.nave-arrastrada.no-valida {
+  background-color: #ff0000;
+  opacity: 0.7;
+} */
 
 /* -------- // DETALLES // -------- */
 
