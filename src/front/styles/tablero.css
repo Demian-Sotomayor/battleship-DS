@@ -39,6 +39,20 @@
   background-color: #5196f0;
 }
 
+/* Color de fondo de la nave arrastrada */
+.nave-arrastrada {
+  background-color: #ff3e03; /* Color de fondo de la nave arrastrada */
+}
+
+.cuadrado.nave-arrastrada {
+  border: 2px solid #000; /* Bordes de los cuadrados durante el arrastre */
+  z-index: 1; /* Asegura que la nave arrastrada esté sobre otros elementos */
+}
+
+.cuadrado.arrastrando {
+  background-color: #d3e0ea; /* Color de fondo ligeramente distinto */
+}
+
 /* -------- // DETALLES // -------- */
 
 .btn-naves-aleatorias {

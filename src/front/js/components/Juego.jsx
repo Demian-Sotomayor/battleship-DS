@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 
+import React, { useState } from "react";
 import "../../styles/tablero.css";
 
 const Juego = () => {
   const [tableroJugador, setTableroJugador] = useState([]);
-  const [navesRestantes, setNavesRestantes] = useState(10);
   const [colocandoNaves, setColocandoNaves] = useState(false);
+  // const [naveArrastrada, setNaveArrastrada] = useState(null);
 
   const inicializarTablero = () => {
     const nuevoTablero = Array.from({ length: 10 }, () =>
@@ -59,7 +59,7 @@ const Juego = () => {
     });
 
     setTableroJugador(nuevoTablero);
-    setNavesRestantes(10);
+    // setNavesRestantes(10);
     setColocandoNaves(false);
   };
 
@@ -133,20 +133,130 @@ const Juego = () => {
     }
   };
 
-  const handleArrastrarNave = (e, rowIndex, colIndex) => {
-    e.preventDefault();
-    // Código para empezar el arrastre de la nave
-  };
+  // const handleArrastrarNave = (e, rowIndex, colIndex) => {
+  //   e.preventDefault();
+  //   const nave = tableroJugador[rowIndex][colIndex];
+  
+  //   if (nave && nave.contenido === "nave") {
+  //     const longitud = obtenerLongitudNave(rowIndex, colIndex);
+  
+  //     setNaveArrastrada({
+  //       inicioFila: rowIndex,
+  //       inicioColumna: colIndex,
+  //       longitud: longitud,
+  //     });
+  
+  //     // Resaltar naves al arrastrarlas
+  //     const nuevoTablero = tableroJugador.map(row => row.slice());
+  //     for (let i = 0; i < longitud; i++) {
+  //       nuevoTablero[rowIndex][colIndex + i] = {
+  //         ...nuevoTablero[rowIndex][colIndex + i],
+  //         arrastrando: true,
+  //       };
+  //     }
+  //     setTableroJugador(nuevoTablero);
+  //   }
+  // };
 
-  const handleSoltarNave = (e, rowIndex, colIndex) => {
-    e.preventDefault();
-    // Código para soltar la nave en la nueva posición
-  };
+  // const obtenerLongitudNave = (fila, columna) => {
+  //   const nave = tableroJugador[fila][columna];
+  //   if (!nave || nave.contenido !== "nave") {
+  //     return 0;
+  //   }
 
-  const handleMoverNave = (e, rowIndex, colIndex) => {
-    e.preventDefault();
-    // Código para mostrar el arrastre de la nave por el tablero
-  };
+  //   let longitud = 1;
+  //   for (let i = columna + 1; i < 10 && tableroJugador[fila][i].contenido === "nave"; i++) {
+  //     longitud++;
+  //   }
+  //   for (let i = columna - 1; i >= 0 && tableroJugador[fila][i].contenido === "nave"; i--) {
+  //     longitud++;
+  //   }
+
+  //   return longitud;
+  // };
+
+  // const handleSoltarNave = (e, rowIndex, colIndex) => {
+  //   e.preventDefault();
+  //   if (naveArrastrada) {
+  //     const { inicioFila, inicioColumna, longitud } = naveArrastrada;
+  //     const nuevaFila = rowIndex;
+  //     const nuevaColumna = colIndex;
+
+  //     const nuevaPosicionValida = esPosicionValida(
+  //       nuevaFila,
+  //       nuevaColumna,
+  //       longitud,
+  //       "horizontal",
+  //       tableroJugador
+  //     );
+
+  //     const nuevoTablero = tableroJugador.map(row => row.map(cell => ({...cell})));
+
+  //     for (let i = 0; i < longitud; i++) {
+  //       nuevoTablero[inicioFila][inicioColumna + i] = {
+  //         contenido: null,
+  //         clickeable: true,
+  //       };
+  //     }
+
+  //     if (nuevaPosicionValida) {
+  //       // Colocar la nave en la nueva posición
+  //       for (let i = 0; i < longitud; i++) {
+  //         nuevoTablero[nuevaFila][nuevaColumna + i] = {
+  //           contenido: "nave",
+  //           clickeable: false,
+  //         };
+  //       }
+  //     }
+
+  //     setTableroJugador(nuevoTablero);
+  //     setNaveArrastrada(null);
+  //   }
+  // };
+
+  // const handleMoverNave = (e, rowIndex, colIndex) => {
+  //   e.preventDefault();
+  //   if (naveArrastrada) {
+  //     const { inicioFila, inicioColumna, longitud } = naveArrastrada;
+  //     const nuevoTablero = tableroJugador.map(row => row.slice());
+  
+  //     for (let i = 0; i < longitud; i++) {
+  //       nuevoTablero[inicioFila][inicioColumna + i] = {
+  //         contenido: null,
+  //         clickeable: true,
+  //         arrastrando: false,
+  //       };
+  //     }
+  
+  //     const nuevaFila = rowIndex;
+  //     const nuevaColumna = colIndex;
+  
+  //     if (esPosicionValida(nuevaFila, nuevaColumna, longitud, "horizontal", nuevoTablero)) {
+  //       for (let i = 0; i < longitud; i++) {
+  //         nuevoTablero[nuevaFila][nuevaColumna + i] = {
+  //           contenido: "nave",
+  //           clickeable: false,
+  //           arrastrando: true,
+  //         };
+  //       }
+  //       setTableroJugador(nuevoTablero);
+  //       setNaveArrastrada({
+  //         inicioFila: nuevaFila,
+  //         inicioColumna: nuevaColumna,
+  //         longitud: longitud,
+  //       });
+  //     } else {
+  //       for (let i = 0; i < longitud; i++) {
+  //         nuevoTablero[inicioFila][inicioColumna + i] = {
+  //           contenido: "nave",
+  //           clickeable: false,
+  //           arrastrando: false,
+  //         };
+  //       }
+  //       setTableroJugador(nuevoTablero);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="my-5">
@@ -171,7 +281,9 @@ const Juego = () => {
                     key={colIndex}
                     className={`cuadrado ${
                       cuadrado.clickeable ? "clickeable" : ""
-                    } ${cuadrado.contenido}`}
+                    } ${cuadrado.contenido} ${
+                      cuadrado.arrastrando ? "nave-arrastrada" : ""
+                    } ${cuadrado.noValida ? "no-valida" : ""}`}
                     onClick={() => handleClickCuadro(rowIndex, colIndex)}
                     onMouseDown={(event) =>
                       handleArrastrarNave(event, rowIndex, colIndex)
