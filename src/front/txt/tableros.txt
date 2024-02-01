@@ -24,7 +24,7 @@ const Tableros = () => {
       Swal.fire("Coloca tus naves para jugar!");
     }
   };
-  
+
   return (
     <div className="p-5">
       <div className="row">
