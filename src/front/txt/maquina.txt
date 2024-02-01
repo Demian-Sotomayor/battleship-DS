@@ -5,6 +5,8 @@ const Maquina = ({
   juegoIniciado,
   turnoJugador,
   setTurnoJugador,
+  tableroJugador,
+  setTableroJugador,
 }) => {
   const [tableroMaquina, setTableroMaquina] = useState([]);
 
@@ -20,11 +22,15 @@ const Maquina = ({
         ataqueExitoso: false,
       })
     );
-  
+    // Eliminar clases "nave" o "disparo" del tablero del jugador
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        nuevoTableroMaquina[i][j].contenido = null;
+      }
+    }
     colocarNavesAleatorias(nuevoTableroMaquina);
     setTableroMaquina(nuevoTableroMaquina);
   };
-  
 
   const esPosicionValida = (
     fila,
@@ -39,7 +45,7 @@ const Maquina = ({
         for (let j = -1; j <= 1; j++) {
           const nuevaFila = f + i;
           const nuevaColumna = c + j;
-  
+
           if (
             nuevaFila >= 0 &&
             nuevaFila < 10 &&
@@ -54,11 +60,12 @@ const Maquina = ({
       }
       return true;
     };
-  
+
     if (orientacion === "horizontal") {
       for (let i = 0; i < longitud; i++) {
         if (
           columna + i >= 10 ||
+          tableroJugador[fila][columna + i].contenido !== null ||
           !proximidadNaves(fila, columna + i)
         ) {
           return false;
@@ -68,6 +75,7 @@ const Maquina = ({
       for (let i = 0; i < longitud; i++) {
         if (
           fila + i >= 10 ||
+          tableroJugador[fila + i][columna].contenido !== null ||
           !proximidadNaves(fila + i, columna)
         ) {
           return false;
@@ -84,14 +92,16 @@ const Maquina = ({
     orientacion,
     tableroMaquina
   ) => {
-    for (let i = 0; i < longitud; i++) {
-      if (orientacion === "horizontal") {
+    if (orientacion === "horizontal") {
+      for (let i = 0; i < longitud; i++) {
         tableroMaquina[fila][columna + i] = {
-          contenido: { tipo: "nave", clickeable: false },
+          contenido: { tipo: "nave", clickeable: true },
         };
-      } else {
+      }
+    } else {
+      for (let i = 0; i < longitud; i++) {
         tableroMaquina[fila + i][columna] = {
-          contenido: { tipo: "nave", clickeable: false },
+          contenido: { tipo: "nave", clickeable: true },
         };
       }
     }
@@ -104,16 +114,16 @@ const Maquina = ({
       2: 4, // 4 naves de longitud 2
       1: 3, // 3 naves de longitud 1
     };
-  
+
     Object.keys(navesPorLongitud).forEach((longitud) => {
       for (let i = 0; i < navesPorLongitud[longitud]; i++) {
         let fila, columna, orientacionActual;
-  
+
         do {
           // Generar posición aleatoria
           fila = Math.floor(Math.random() * 10);
           columna = Math.floor(Math.random() * 10);
-  
+
           // Cambiar entre orientación horizontal y vertical
           orientacionActual =
             orientacionActual === "horizontal" ? "vertical" : "horizontal";
@@ -126,7 +136,7 @@ const Maquina = ({
             tableroMaquina
           )
         );
-  
+
         colocarNaveEnTablero(
           fila,
           columna,
@@ -140,30 +150,76 @@ const Maquina = ({
 
   const realizarAtaque = (fila, columna) => {
     if (turnoJugador && tableroMaquina[fila][columna].clickeable) {
-      const nuevoTableroMaquina = [...tableroMaquina];
-      const contenido = nuevoTableroMaquina[fila][columna].contenido;
-  
-      if (contenido && contenido.tipo === "nave") {
-        nuevoTableroMaquina[fila][columna] = {
-          contenido: {
-            tipo: "nave-disparada",
-            clickeable: false,
-          },
-        };
-      } else if (!contenido) {
-        nuevoTableroMaquina[fila][columna] = {
-          contenido: {
-            tipo: "disparo",
-            clickeable: false,
-            ataqueExitoso: false,
-          },
-        };
-      }
-  
-      setTableroMaquina(nuevoTableroMaquina);
-      setTurnoJugador(false);
+        const nuevoTableroMaquina = [...tableroMaquina];
+        if (nuevoTableroMaquina[fila][columna].contenido && nuevoTableroMaquina[fila][columna].contenido.tipo === "nave") {
+            nuevoTableroMaquina[fila][columna] = {
+                contenido: { tipo: "disparo", clickeable: false, ataqueExitoso: true },
+            };
+        } else {
+            nuevoTableroMaquina[fila][columna] = {
+                contenido: { tipo: "disparo", clickeable: false, ataqueExitoso: false },
+            };
+        }
+        setTableroMaquina(nuevoTableroMaquina);
+        setTurnoJugador(false);
     }
-  };
+};
+
+const encontrarCuadroClickeableAleatorio = (tableroJugador) => {
+    const cuadradosClickeables = [];
+
+    // Verificar que el tablero del jugador esté inicializado y no sea un array vacío
+    if (tableroJugador && tableroJugador.length > 0) {
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                // Permitir atacar cuadros clickeables, independientemente de la clase
+                if (tableroJugador[i][j].clickeable && !tableroJugador[i][j].visible) {
+                    cuadradosClickeables.push({ fila: i, columna: j });
+                }
+            }
+        }
+    }
+
+    if (cuadradosClickeables.length > 0) {
+        const cuadroAleatorio = cuadradosClickeables.find(
+            (cuadro) =>
+                tableroJugador[cuadro.fila][cuadro.columna].contenido &&
+                tableroJugador[cuadro.fila][cuadro.columna].contenido.tipo === "nave"
+        );
+
+        return cuadroAleatorio;
+    } else {
+        // Manejar el caso cuando no hay cuadros clickeables
+        console.log("No hay cuadros clickeables disponibles");
+        return null;
+    }
+};
+
+  useEffect(() => {
+    if (juegoIniciado && !turnoJugador) {
+      const timeoutId = setTimeout(() => {
+        const cuadroAleatorio =
+          encontrarCuadroClickeableAleatorio(tableroJugador);
+        if (cuadroAleatorio && tableroJugador[cuadroAleatorio.fila]) {
+          const nuevoTableroMaquina = [...tableroMaquina];
+          nuevoTableroMaquina[cuadroAleatorio.fila][cuadroAleatorio.columna] = {
+            contenido: "disparo",
+            clickeable: false,
+          };
+          setTableroMaquina(nuevoTableroMaquina);
+          setTurnoJugador(true);
+        }
+      }, 1000); // Retraso de 1 segundo (ajustable)
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [
+    juegoIniciado,
+    turnoJugador,
+    tableroMaquina,
+    tableroJugador,
+    setTurnoJugador,
+  ]);
 
   return (
     <div className="my-5">
@@ -183,30 +239,19 @@ const Maquina = ({
             {tableroMaquina.map((fila, rowIndex) => (
               <tr key={rowIndex}>
                 <td className="etiqueta">{rowIndex + 1}</td>
-                {fila.map((cuadrado, colIndex) => {
-                  const clases = `cuadrado ${
-                    cuadrado.clickeable ? "clickeable" : ""
-                  } ${
-                    cuadrado.contenido &&
-                    cuadrado.contenido.tipo === "nave"
-                      ? "nave"
-                      : cuadrado.contenido?.tipo === "nave-disparada"
-                      ? "nave-disparada"
-                      : cuadrado.contenido?.tipo === "disparo"
-                      ? cuadrado.contenido?.ataqueExitoso
+                {fila.map((cuadrado, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className={`cuadrado ${
+                      cuadrado.clickeable ? "clickeable" : ""
+                    } ${
+                      cuadrado.contenido === "nave" && cuadrado.ataqueExitoso
                         ? "nave-disparada"
-                        : "disparo"
-                      : ""
-                  }`;
-  
-                  return (
-                    <td
-                      key={colIndex}
-                      className={clases}
-                      onClick={() => realizarAtaque(rowIndex, colIndex)}
-                    ></td>
-                  );
-                })}
+                        : ""
+                    } ${cuadrado.contenido === "disparo" ? "disparo" : ""}`}
+                    onClick={() => realizarAtaque(rowIndex, colIndex)}
+                  ></td>
+                ))}
               </tr>
             ))}
           </tbody>
@@ -214,6 +259,6 @@ const Maquina = ({
       </div>
     </div>
   );
-  };
+};
 
 export default Maquina;

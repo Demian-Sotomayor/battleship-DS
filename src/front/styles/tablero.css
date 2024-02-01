@@ -31,6 +31,11 @@
   background-color: #add8e6;
 }
 
+.cuadrado.clickeable:hover {
+  border: 3px solid green;
+  background-color: #add8e6;
+}
+
 .cuadrado:not(.clickeable) {
   background-color: #eee;
 }
@@ -42,6 +47,15 @@
 .cuadrado.nave {
   color: #000;
   background-color: #5196f0;
+}
+
+/* Color del cuadrado cuando se dispara a un espacio vacío */
+.cuadrado.disparo {
+  background-color: whitesmoke;
+}
+
+.cuadrado.nave-disparada {
+  background-color:  rgb(242, 80, 80);
 }
 
 /* -------- // BOTONES // -------- */
