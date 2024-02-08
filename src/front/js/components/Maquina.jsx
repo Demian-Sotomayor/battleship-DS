@@ -5,26 +5,28 @@ const Maquina = ({
   juegoIniciado,
   turnoJugador,
   setTurnoJugador,
+  atacarTableroJugador,
+  tableroJugador,
+  setTableroJugador
 }) => {
   const [tableroMaquina, setTableroMaquina] = useState([]);
-
-  useEffect(() => {
-    inicializarTableroMaquina();
-  }, [juegoIniciado]);
 
   const inicializarTableroMaquina = () => {
     const nuevoTableroMaquina = Array.from({ length: 10 }, () =>
       Array(10).fill({
         contenido: null,
         clickeable: true,
-        ataqueExitoso: false,
       })
     );
-  
+
     colocarNavesAleatorias(nuevoTableroMaquina);
     setTableroMaquina(nuevoTableroMaquina);
+    console.log("TABLERO DE MÁQUINA INICIALIZADO", nuevoTableroMaquina);
   };
-  
+
+  useEffect(() => {
+    inicializarTableroMaquina();
+  }, [juegoIniciado]);
 
   const esPosicionValida = (
     fila,
@@ -39,7 +41,7 @@ const Maquina = ({
         for (let j = -1; j <= 1; j++) {
           const nuevaFila = f + i;
           const nuevaColumna = c + j;
-  
+
           if (
             nuevaFila >= 0 &&
             nuevaFila < 10 &&
@@ -54,22 +56,16 @@ const Maquina = ({
       }
       return true;
     };
-  
+
     if (orientacion === "horizontal") {
       for (let i = 0; i < longitud; i++) {
-        if (
-          columna + i >= 10 ||
-          !proximidadNaves(fila, columna + i)
-        ) {
+        if (columna + i >= 10 || !proximidadNaves(fila, columna + i)) {
           return false;
         }
       }
     } else {
       for (let i = 0; i < longitud; i++) {
-        if (
-          fila + i >= 10 ||
-          !proximidadNaves(fila + i, columna)
-        ) {
+        if (fila + i >= 10 || !proximidadNaves(fila + i, columna)) {
           return false;
         }
       }
@@ -87,11 +83,11 @@ const Maquina = ({
     for (let i = 0; i < longitud; i++) {
       if (orientacion === "horizontal") {
         tableroMaquina[fila][columna + i] = {
-          contenido: { tipo: "nave", clickeable: false },
+          contenido: { tipo: "nave", clickeable: false, ataqueExitoso: false },
         };
       } else {
         tableroMaquina[fila + i][columna] = {
-          contenido: { tipo: "nave", clickeable: false },
+          contenido: { tipo: "nave", clickeable: false, ataqueExitoso: false },
         };
       }
     }
@@ -104,16 +100,16 @@ const Maquina = ({
       2: 4, // 4 naves de longitud 2
       1: 3, // 3 naves de longitud 1
     };
-  
+
     Object.keys(navesPorLongitud).forEach((longitud) => {
       for (let i = 0; i < navesPorLongitud[longitud]; i++) {
         let fila, columna, orientacionActual;
-  
+
         do {
           // Generar posición aleatoria
           fila = Math.floor(Math.random() * 10);
           columna = Math.floor(Math.random() * 10);
-  
+
           // Cambiar entre orientación horizontal y vertical
           orientacionActual =
             orientacionActual === "horizontal" ? "vertical" : "horizontal";
@@ -126,7 +122,7 @@ const Maquina = ({
             tableroMaquina
           )
         );
-  
+
         colocarNaveEnTablero(
           fila,
           columna,
@@ -139,10 +135,22 @@ const Maquina = ({
   };
 
   const realizarAtaque = (fila, columna) => {
-    if (turnoJugador && tableroMaquina[fila][columna].clickeable) {
+    console.log(
+      "Atacando la fila: ",
+      fila,
+      "y la columna: ",
+      columna,
+      "En Maquina.jsx, realizarAtaque"
+    );
+    if (
+      turnoJugador &&
+      tableroMaquina[fila] &&
+      tableroMaquina[fila][columna] &&
+      tableroMaquina[fila][columna].clickeable
+    ) {
       const nuevoTableroMaquina = [...tableroMaquina];
       const contenido = nuevoTableroMaquina[fila][columna].contenido;
-  
+
       if (contenido && contenido.tipo === "nave") {
         nuevoTableroMaquina[fila][columna] = {
           contenido: {
@@ -159,11 +167,30 @@ const Maquina = ({
           },
         };
       }
-  
+
       setTableroMaquina(nuevoTableroMaquina);
+
       setTurnoJugador(false);
     }
   };
+
+  useEffect(() => {
+    if (!juegoIniciado || turnoJugador) {
+      return;
+    }
+  
+    const realizarAtaqueMaquina = () => {
+      const fila = Math.floor(Math.random() * 10);
+      const columna = Math.floor(Math.random() * 10);
+  
+      atacarTableroJugador(fila, columna, tableroJugador, setTableroJugador, setTurnoJugador);
+      console.log("Realizando ataque al tablero del jugador (desde Maquina.jsx, realizarAtaqueMaquina), atacando fila:", fila, "columna:", columna)
+    };
+  
+    setTimeout(() => {
+      realizarAtaqueMaquina();
+    }, 1000);
+  }, [turnoJugador]);
 
   return (
     <div className="my-5">
@@ -187,8 +214,7 @@ const Maquina = ({
                   const clases = `cuadrado ${
                     cuadrado.clickeable ? "clickeable" : ""
                   } ${
-                    cuadrado.contenido &&
-                    cuadrado.contenido.tipo === "nave"
+                    cuadrado.contenido && cuadrado.contenido.tipo === "nave"
                       ? "nave"
                       : cuadrado.contenido?.tipo === "nave-disparada"
                       ? "nave-disparada"
@@ -198,7 +224,7 @@ const Maquina = ({
                         : "disparo"
                       : ""
                   }`;
-  
+
                   return (
                     <td
                       key={colIndex}
@@ -214,6 +240,6 @@ const Maquina = ({
       </div>
     </div>
   );
-  };
+};
 
 export default Maquina;

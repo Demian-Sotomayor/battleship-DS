@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Jugador from "../components/Jugador";
+import Jugador, { atacarTableroJugador } from "../components/Jugador";
 import Maquina from "../components/Maquina";
 import Swal from "sweetalert2";
 
@@ -12,7 +12,6 @@ const Tableros = () => {
   const [turnoJugador, setTurnoJugador] = useState(true);
   const [tableroMaquina, setTableroMaquina] = useState([]);
   const [tableroJugador, setTableroJugador] = useState([]);
-  // console.log('(Tableros.jsx) Estado actual:', { juegoIniciado, navesColocadas, mostrarBotonNavesAleatorias, numeroTurno, turnoJugador });
 
   const handleIniciarJuego = () => {
     console.log("(Tablero.jsx) Iniciando juego...");
@@ -24,7 +23,7 @@ const Tableros = () => {
       Swal.fire("Coloca tus naves para jugar!");
     }
   };
-  
+
   return (
     <div className="p-5">
       <div className="row">
@@ -44,6 +43,7 @@ const Tableros = () => {
           setTurnoJugador={setTurnoJugador}
           tableroMaquina={tableroMaquina}
           setTableroJugador={setTableroJugador}
+          tableroJugador={tableroJugador}
           setTableroMaquina={setTableroMaquina}
         />
         <Maquina
@@ -53,6 +53,7 @@ const Tableros = () => {
           setTableroMaquina={setTableroMaquina}
           tableroJugador={tableroJugador}
           setTableroJugador={setTableroJugador}
+          atacarTableroJugador={atacarTableroJugador}
         />
       </div>
 

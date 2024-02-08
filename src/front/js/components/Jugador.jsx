@@ -1,21 +1,73 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/tablero.css";
 
+export const atacarTableroJugador = (
+  fila,
+  colIndex,
+  tableroJugador,
+  setTableroJugador,
+  setTurnoJugador
+) => {
+  console.log("Intentando atacar a tablero de jugador, fila: ", fila, "columna: ", colIndex);
+  if (
+    fila >= 0 &&
+    fila < 10 &&
+    colIndex >= 0 &&
+    colIndex < 10 &&
+    tableroJugador
+  ) {
+    console.log(tableroJugador, "probandooooooooooooo")
+    // Clonar el tablero original profundamente
+    const nuevoTableroJugador = JSON.parse(JSON.stringify(tableroJugador));
+
+    // Lógica para el ataque de la máquina al jugador
+    
+    console.log("[LÍNEA DEL ERROR] fila:", fila, "columna:", colIndex);
+    console.log("VIENDO TABLERO JUGADOR", nuevoTableroJugador)
+    console.log("PROBANDO ERROR", nuevoTableroJugador[fila][colIndex]);
+    if (nuevoTableroJugador[fila][colIndex].contenido?.tipo === "nave") {
+      console.log("Este console.log no se ejecuta");
+      nuevoTableroJugador[fila][colIndex] = {
+        contenido: {
+          tipo: "nave-disparada",
+          clickeable: false,
+          ataqueExitoso: true,
+        },
+      };
+      console.log(
+        "Tablero de jugador si el disparo acierta (luego de que la máquina intente atacar, en if)",
+        nuevoTableroJugador
+      );
+    } else if (!nuevoTableroJugador[fila][colIndex].contenido) {
+      nuevoTableroJugador[fila][colIndex] = {
+        contenido: {
+          tipo: "disparo",
+          ataqueExitoso: false,
+          clickeable: false,
+        },
+      };
+      console.log(
+        "Tablero de jugador si el disparo falla (luego de que la máquina intente atacar, en else if)",
+        nuevoTableroJugador
+      );
+    }
+
+    setTableroJugador(nuevoTableroJugador);
+    setTurnoJugador(true); // Después del ataque de la máquina, vuelve al turno del jugador
+  }
+};
+
+
+
 const Jugador = ({
   juegoIniciado,
   setNavesColocadas,
   setMostrarBotonNavesAleatorias,
   turnoJugador,
-  setTurnoJugador,
-  tableroMaquina,
-  setTableroMaquina,
+  tableroJugador,
+  setTableroJugador
 }) => {
-  const [tableroJugador, setTableroJugador] = useState([]);
   const [colocandoNaves, setColocandoNaves] = useState(false);
-
-  useEffect(() => {
-    inicializarTablero();
-  }, [colocandoNaves]);
 
   const inicializarTablero = () => {
     const nuevoTableroJugador = Array.from({ length: 10 }, () =>
@@ -24,8 +76,12 @@ const Jugador = ({
     setTableroJugador(nuevoTableroJugador);
   };
 
+  useEffect(() => {
+    inicializarTablero();
+  }, [colocandoNaves]);
+
   const handleClickCuadro = (fila, columna) => {
-    if (juegoIniciado) {
+    if (juegoIniciado && turnoJugador) {
       const cuadroSeleccionado = tableroJugador[fila][columna];
 
       if (turnoJugador) {
@@ -37,18 +93,6 @@ const Jugador = ({
         ) {
           return;
         }
-
-        const nuevoTableroJugador = [...tableroJugador];
-        nuevoTableroJugador[fila][columna] = {
-          ...cuadroSeleccionado,
-          clickeable: false,
-          disparado: true,
-        };
-
-        setTableroJugador(nuevoTableroJugador);
-
-        // Actualiza el tablero de la máquina
-        atacarTableroMaquina(fila, columna);
       }
     }
   };
@@ -132,48 +176,6 @@ const Jugador = ({
     }
   };
 
-  const atacarTableroMaquina = (fila, columna) => {
-    if (juegoIniciado && turnoJugador) {
-      const cuadroMaquina = tableroMaquina[fila][columna];
-
-      if (
-        esPropioTablero(fila, columna) ||
-        !cuadroMaquina.clickeable ||
-        cuadroMaquina.contenido !== null
-      ) {
-        return;
-      }
-
-      // Actualizar el tablero de la máquina en función del ataque del jugador
-      const nuevoTableroMaquina = tableroMaquina.map((fila) =>
-        fila.map((cuadrado) => ({ ...cuadrado }))
-      );
-      nuevoTableroMaquina[fila][columna] = {
-        contenido: { tipo: "disparo", ataqueExitoso: true, clickeable: false },
-      };
-      setTableroMaquina(nuevoTableroMaquina);
-
-      // Cambiar el turno a la máquina después del ataque del jugador
-      setTurnoJugador(false);
-
-      // Verificar si el ataque del jugador fue exitoso
-      if (cuadroMaquina.contenido.tipo === "nave") {
-        // Si el ataque fue exitoso, actualizar el tablero del jugador
-        const nuevoTableroJugador = tableroJugador.map((fila) =>
-          fila.map((cuadrado) => ({ ...cuadrado }))
-        );
-        nuevoTableroJugador[fila][columna] = {
-          contenido: {
-            tipo: "disparo",
-            ataqueExitoso: true,
-            clickeable: false,
-          },
-        };
-        setTableroJugador(nuevoTableroJugador);
-      }
-    }
-  };
-
   const handleColocarNaves = () => {
     const nuevoTableroJugador = Array.from({ length: 10 }, () =>
       Array(10).fill({ contenido: null, clickeable: true })
@@ -222,6 +224,7 @@ const Jugador = ({
     setColocandoNaves(false);
     setNavesColocadas(true);
     setMostrarBotonNavesAleatorias(false);
+    console.log("TABLERO CON NAVES PUESTAS DEL JUGADOR", nuevoTableroJugador);
   };
 
   return (
@@ -256,7 +259,7 @@ const Jugador = ({
                         : ""
                       : ""
                   }`;
-  
+
                   return (
                     <td
                       key={colIndex}
@@ -270,7 +273,7 @@ const Jugador = ({
           </tbody>
         </table>
       </div>
-  
+
       {!juegoIniciado && (
         <button
           className="btn btn-info mt-5 fw-bold btn-naves-aleatorias"
@@ -281,6 +284,6 @@ const Jugador = ({
       )}
     </div>
   );
-  };
+};
 
 export default Jugador;
