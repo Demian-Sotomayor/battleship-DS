@@ -8,7 +8,6 @@ export const atacarTableroJugador = (
   setTableroJugador,
   setTurnoJugador
 ) => {
-  console.log("Intentando atacar a tablero de jugador, fila: ", fila, "columna: ", colIndex);
   if (
     fila >= 0 &&
     fila < 10 &&
@@ -16,17 +15,11 @@ export const atacarTableroJugador = (
     colIndex < 10 &&
     tableroJugador
   ) {
-    console.log(tableroJugador, "probandooooooooooooo")
     // Clonar el tablero original profundamente
     const nuevoTableroJugador = JSON.parse(JSON.stringify(tableroJugador));
 
     // Lógica para el ataque de la máquina al jugador
-    
-    console.log("[LÍNEA DEL ERROR] fila:", fila, "columna:", colIndex);
-    console.log("VIENDO TABLERO JUGADOR", nuevoTableroJugador)
-    console.log("PROBANDO ERROR", nuevoTableroJugador[fila][colIndex]);
     if (nuevoTableroJugador[fila][colIndex].contenido?.tipo === "nave") {
-      console.log("Este console.log no se ejecuta");
       nuevoTableroJugador[fila][colIndex] = {
         contenido: {
           tipo: "nave-disparada",
@@ -34,10 +27,7 @@ export const atacarTableroJugador = (
           ataqueExitoso: true,
         },
       };
-      console.log(
-        "Tablero de jugador si el disparo acierta (luego de que la máquina intente atacar, en if)",
-        nuevoTableroJugador
-      );
+
     } else if (!nuevoTableroJugador[fila][colIndex].contenido) {
       nuevoTableroJugador[fila][colIndex] = {
         contenido: {
@@ -46,10 +36,6 @@ export const atacarTableroJugador = (
           clickeable: false,
         },
       };
-      console.log(
-        "Tablero de jugador si el disparo falla (luego de que la máquina intente atacar, en else if)",
-        nuevoTableroJugador
-      );
     }
 
     setTableroJugador(nuevoTableroJugador);
@@ -57,15 +43,14 @@ export const atacarTableroJugador = (
   }
 };
 
-
-
 const Jugador = ({
   juegoIniciado,
   setNavesColocadas,
   setMostrarBotonNavesAleatorias,
   turnoJugador,
   tableroJugador,
-  setTableroJugador
+  setTableroJugador,
+  setTurnoJugador,
 }) => {
   const [colocandoNaves, setColocandoNaves] = useState(false);
 
@@ -93,6 +78,15 @@ const Jugador = ({
         ) {
           return;
         }
+
+        // Realizar ataque al cuadrado seleccionado
+        atacarTableroJugador(
+          fila,
+          columna,
+          tableroJugador,
+          setTableroJugador,
+          setTurnoJugador
+        );
       }
     }
   };
@@ -224,7 +218,6 @@ const Jugador = ({
     setColocandoNaves(false);
     setNavesColocadas(true);
     setMostrarBotonNavesAleatorias(false);
-    console.log("TABLERO CON NAVES PUESTAS DEL JUGADOR", nuevoTableroJugador);
   };
 
   return (
@@ -249,14 +242,14 @@ const Jugador = ({
                   const clases = `cuadrado ${
                     cuadrado.clickeable ? "clickeable" : ""
                   } ${
-                    cuadrado.contenido
-                      ? cuadrado.contenido.tipo === "nave"
-                        ? "nave"
-                        : cuadrado.contenido.tipo === "disparo"
-                        ? cuadrado.contenido.ataqueExitoso
-                          ? "nave-disparada"
-                          : "disparo"
-                        : ""
+                    cuadrado.contenido?.tipo === "nave"
+                      ? "nave"
+                      : cuadrado.contenido?.tipo === "nave-disparada"
+                      ? "nave-disparada"
+                      : cuadrado.contenido?.tipo === "disparo"
+                      ? cuadrado.contenido?.ataqueExitoso
+                        ? "nave-disparada"
+                        : "disparo"
                       : ""
                   }`;
 

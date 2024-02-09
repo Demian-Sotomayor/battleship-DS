@@ -41,21 +41,21 @@
 }
 
 .cuadrado.agua {
-  color: #add8e6;
+  color: #8dc5d7;
 }
 
 .cuadrado.nave {
   color: #000;
-  background-color: #5196f0;
+  background-color: #64a4f7;
 }
 
 /* Color del cuadrado cuando se dispara a un espacio vacío */
 .cuadrado.disparo {
-  background-color: whitesmoke;
+  background-color: rgb(222, 225, 226);
 }
 
 .cuadrado.nave-disparada {
-  background-color:  rgb(242, 80, 80);
+  background-color:  rgb(208, 81, 81);
 }
 
 /* -------- // BOTONES // -------- */

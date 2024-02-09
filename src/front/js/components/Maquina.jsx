@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/tablero.css";
+import Swal from "sweetalert2";
 
 const Maquina = ({
   juegoIniciado,
@@ -7,7 +8,7 @@ const Maquina = ({
   setTurnoJugador,
   atacarTableroJugador,
   tableroJugador,
-  setTableroJugador
+  setTableroJugador,
 }) => {
   const [tableroMaquina, setTableroMaquina] = useState([]);
 
@@ -21,7 +22,6 @@ const Maquina = ({
 
     colocarNavesAleatorias(nuevoTableroMaquina);
     setTableroMaquina(nuevoTableroMaquina);
-    console.log("TABLERO DE MÁQUINA INICIALIZADO", nuevoTableroMaquina);
   };
 
   useEffect(() => {
@@ -135,58 +135,123 @@ const Maquina = ({
   };
 
   const realizarAtaque = (fila, columna) => {
-    console.log(
-      "Atacando la fila: ",
-      fila,
-      "y la columna: ",
-      columna,
-      "En Maquina.jsx, realizarAtaque"
-    );
     if (
-      turnoJugador &&
-      tableroMaquina[fila] &&
-      tableroMaquina[fila][columna] &&
-      tableroMaquina[fila][columna].clickeable
+      !turnoJugador ||
+      !tableroMaquina.length ||
+      !tableroMaquina[fila] ||
+      !tableroMaquina[fila][columna] ||
+      tableroMaquina[fila][columna].contenido?.tipo === "disparo" ||
+      tableroMaquina[fila][columna].contenido?.tipo === "nave-disparada"
     ) {
-      const nuevoTableroMaquina = [...tableroMaquina];
-      const contenido = nuevoTableroMaquina[fila][columna].contenido;
-
-      if (contenido && contenido.tipo === "nave") {
-        nuevoTableroMaquina[fila][columna] = {
-          contenido: {
-            tipo: "nave-disparada",
-            clickeable: false,
-          },
-        };
-      } else if (!contenido) {
-        nuevoTableroMaquina[fila][columna] = {
-          contenido: {
-            tipo: "disparo",
-            clickeable: false,
-            ataqueExitoso: false,
-          },
-        };
-      }
-
-      setTableroMaquina(nuevoTableroMaquina);
-
+      // El turno no es del jugador, el cuadrado ya ha sido atacado o es una nave ya disparada
+      return;
+    }
+  
+    const cuadrado = tableroMaquina[fila][columna];
+  
+    // Verificar si el cuadrado ya ha sido atacado previamente
+    if (cuadrado.contenido && cuadrado.contenido.tipo === "disparo") {
+      // El cuadrado ya fue atacado, no se puede atacar nuevamente
+      return;
+    }
+  
+    const nuevoTableroMaquina = [...tableroMaquina];
+    const contenido = cuadrado.contenido;
+  
+    if (contenido && contenido.tipo === "nave") {
+      // Mantener las propiedades existentes y solo actualizar el tipo
+      nuevoTableroMaquina[fila][columna].contenido.tipo = "nave-disparada";
+      nuevoTableroMaquina[fila][columna].contenido.clickeable = false;
+    } else if (!contenido) {
+      nuevoTableroMaquina[fila][columna] = {
+        contenido: {
+          tipo: "disparo",
+          clickeable: false,
+          ataqueExitoso: false,
+        },
+      };
+    }
+  
+    setTableroMaquina(nuevoTableroMaquina);
+  
+    // Verificar si se destruyeron todas las naves de la máquina
+    const navesRestantes = tableroMaquina
+      .flat()
+      .filter((cuadrado) => cuadrado?.contenido?.tipo === "nave").length;
+    if (navesRestantes === 0) {
+      // Mostrar mensaje de victoria
+      Swal.fire({
+        title: "¡Victoria!",
+        text: "¡Has destruido todas las naves de la máquina!",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Jugar de nuevo",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload(false);
+        }
+      });
+    } else {
+      // Cambiar el turno al oponente
       setTurnoJugador(false);
     }
   };
+  
 
   useEffect(() => {
     if (!juegoIniciado || turnoJugador) {
       return;
     }
-  
+
     const realizarAtaqueMaquina = () => {
-      const fila = Math.floor(Math.random() * 10);
-      const columna = Math.floor(Math.random() * 10);
-  
-      atacarTableroJugador(fila, columna, tableroJugador, setTableroJugador, setTurnoJugador);
-      console.log("Realizando ataque al tablero del jugador (desde Maquina.jsx, realizarAtaqueMaquina), atacando fila:", fila, "columna:", columna)
+      let fila, columna;
+    
+      // Función para verificar si un cuadrado es válido para disparar
+      const esCuadradoValido = (f, c, tablero) => {
+        const contenido = tablero[f][c].contenido;
+        return !contenido || (contenido.tipo !== "disparo" && contenido.tipo !== "nave-disparada");
+      };
+    
+      // Seleccionar una fila y columna aleatorias que cumplan las condiciones
+      do {
+        fila = Math.floor(Math.random() * 10);
+        columna = Math.floor(Math.random() * 10);
+      } while (!esCuadradoValido(fila, columna, tableroJugador));
+    
+      // Realizar el ataque al tablero del jugador
+      atacarTableroJugador(
+        fila,
+        columna,
+        tableroJugador,
+        setTableroJugador,
+        setTurnoJugador
+      );
+    
+      // Verificar si se destruyeron todas las naves del jugador
+      const navesRestantes = tableroJugador
+        .flat()
+        .filter((cuadrado) => cuadrado?.contenido?.tipo === "nave").length;
+      if (navesRestantes === 0) {
+        // Mostrar mensaje de derrota
+        Swal.fire({
+          title: "¡Derrota!",
+          text: "¡Todas tus naves han sido destruidas por la máquina!",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Jugar de nuevo",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload(false);
+          }
+        });
+      } else {
+        // Cambiar el turno al jugador
+        setTurnoJugador(true);
+      }
     };
-  
+
     setTimeout(() => {
       realizarAtaqueMaquina();
     }, 1000);
@@ -213,18 +278,18 @@ const Maquina = ({
                 {fila.map((cuadrado, colIndex) => {
                   const clases = `cuadrado ${
                     cuadrado.clickeable ? "clickeable" : ""
-                  } ${
-                    cuadrado.contenido && cuadrado.contenido.tipo === "nave"
-                      ? "nave"
-                      : cuadrado.contenido?.tipo === "nave-disparada"
-                      ? "nave-disparada"
-                      : cuadrado.contenido?.tipo === "disparo"
-                      ? cuadrado.contenido?.ataqueExitoso
+                  }
+                    ${
+                      cuadrado.contenido?.tipo === "nave"
+                        ? "clickeable"
+                        : cuadrado.contenido?.tipo === "nave-disparada"
                         ? "nave-disparada"
-                        : "disparo"
-                      : ""
-                  }`;
-
+                        : cuadrado.contenido?.tipo === "disparo"
+                        ? cuadrado.contenido?.ataqueExitoso
+                          ? "nave-disparada"
+                          : "disparo"
+                        : ""
+                    }`;
                   return (
                     <td
                       key={colIndex}
