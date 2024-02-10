@@ -38,3 +38,5 @@
 ![inicio](./public/juego-iniciado-battleship.jpg)
 
 ![victoria](./public/victoria-battleship.jpg)
+
+![derrota](./public/derrota-battleship.jpg)
