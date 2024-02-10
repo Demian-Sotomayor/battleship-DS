@@ -39,7 +39,7 @@ export const atacarTableroJugador = (
     }
 
     setTableroJugador(nuevoTableroJugador);
-    setTurnoJugador(true); // Después del ataque de la máquina, vuelve al turno del jugador
+    setTurnoJugador(true);
   }
 };
 

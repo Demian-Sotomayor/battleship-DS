@@ -159,7 +159,6 @@ const Maquina = ({
     const contenido = cuadrado.contenido;
   
     if (contenido && contenido.tipo === "nave") {
-      // Mantener las propiedades existentes y solo actualizar el tipo
       nuevoTableroMaquina[fila][columna].contenido.tipo = "nave-disparada";
       nuevoTableroMaquina[fila][columna].contenido.clickeable = false;
     } else if (!contenido) {

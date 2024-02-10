@@ -14,7 +14,6 @@ const Tableros = () => {
   const [tableroJugador, setTableroJugador] = useState([]);
 
   const handleIniciarJuego = () => {
-    console.log("(Tablero.jsx) Iniciando juego...");
     if (navesColocadas) {
       setJuegoIniciado(true);
       setMostrarBotonNavesAleatorias(false);
