@@ -31,3 +31,10 @@
 - npm install
 - npm run dev
 - abrir en localhost
+
+## Imágenes del juego:
+![Menu](./public/menu-battleship.jpg)
+
+![inicio](./public/juego-iniciado-battleship.jpg)
+
+![victoria](./public/victoria-battleship.jpg)
